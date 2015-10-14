@@ -1,0 +1,76 @@
+{
+	"name": "@zayesh/circlerasteriser",
+	"version": "0.0.0",
+	"description": "A circle rasterisation program.",
+	"homepage": "https://github.com/vanruesc/circlerasteriser",
+	"main": "build/circlerasteriser",
+	"jsnext:main": "src/circlerasteriser",
+	"license": "Zlib",
+
+	"bin": {
+		"circle": "bin/circlerasteriser.js"
+	},
+
+	"keywords": [
+		"digital",
+		"media",
+		"fhb",
+		"raster",
+		"graphic",
+		"circle"
+	],
+
+	"author": {
+		"name": "Raoul van Rueschen",
+		"email": "vanruesc@fh-brandenburg.de"
+	},
+
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vanruesc/circlerasteriser.git"
+	},
+
+	"bugs": {
+		"url": "https://github.com/vanruesc/circlerasteriser/issues"
+	},
+
+	"scripts": {
+
+		"jshint:test": "jshint test",
+		"jshint:lib": "jshint src",
+		"jshint": "npm run jshint:test && npm run jshint:lib",
+
+		"rollup": "rollup -f cjs -n CircleRasteriser -i src/circlerasteriser.js -o build/circlerasteriser.js",
+		"uglify": "uglifyjs build/circlerasteriser.js -c -m -o build/circlerasteriser.min.js",
+
+		"mocha": "mocha test",
+		"yuidoc": "yuidoc src -q -c yuidoc.json",
+
+		"prebuild": "npm run jshint",
+		"build": "npm run rollup && npm run uglify",
+		"postbuild": "node banner.js && mkdirp output",
+		"pretest": "npm run build",
+		"test": "npm run mocha",
+		"posttest": "npm unlink && npm link && circle -r 60 -x 100 -y 75"
+
+	},
+
+	"engines": {
+		"node": ">= 0.10.0"
+	},
+
+	"dependencies": {
+		"jpeg-js": "0.1.x",
+		"minimist": "1.1.x"
+	},
+
+	"devDependencies": {
+		"jshint": "2.x.x",
+		"mkdirp": "0.x.x",
+		"mocha": "2.x.x",
+		"prepend-file": "1.x.x",
+		"rollup": "0.17.x",
+		"uglify-js": "2.x.x",
+		"yuidocjs": "0.x.x"
+	}
+}

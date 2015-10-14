@@ -1,0 +1,9 @@
+{
+	"name": "CircleRasteriser API",
+	"description": "A circle rasterisation program.",
+	"version": "0.0.0",
+	"url": "https://github.com/vanruesc/circlerasteriser",
+	"options": {
+		"outdir": "docs"
+	}
+}
