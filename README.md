@@ -25,7 +25,6 @@ $ npm link
 # You may now generate new raster graphics. If you leave out
 # the name, the image will be saved under output/circle.jpg
 $ circle -r 60 -x 100 -y 75 -n myCircle
-
 ```
 
 ```sh
