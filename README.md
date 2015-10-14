@@ -1,5 +1,5 @@
 # CircleRasteriser
-[![Build status](https://travis-ci.org/vanruesc/raster-circle.svg?branch=master)](https://travis-ci.org/vanruesc/circlerasteriser) 
+[![Build status](https://travis-ci.org/vanruesc/circlerasteriser.svg?branch=master)](https://travis-ci.org/vanruesc/circlerasteriser) 
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/7sx1wwmvv2a6o1pm?svg=true)](https://ci.appveyor.com/project/vanruesc/circlerasteriser) 
 [![GitHub version](https://badge.fury.io/gh/vanruesc%2Fcirclerasteriser.svg)](http://badge.fury.io/gh/vanruesc%2Fcirclerasteriser) 
 [![Dependencies](https://david-dm.org/vanruesc/circlerasteriser.svg?branch=master)](https://david-dm.org/vanruesc/circlerasteriser)
@@ -59,7 +59,7 @@ $ rm circlerasteriser
 
 ## Documentation
 
-[API](http://vanruesc.github.io/raster-circle/docs)
+[API](http://vanruesc.github.io/circlerasteriser/docs)
 
 
 ## License
