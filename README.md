@@ -1,6 +1,6 @@
 # CircleRasteriser
-[![Build status](https://travis-ci.org/vanruesc/raster-circle.svg?branch=master)](https://travis-ci.org/vanruesc/circlerasteriser) 
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/XXXXXXX?svg=true)](https://ci.appveyor.com/project/vanruesc/circlerasteriser) 
+[![Build status](https://travis-ci.org/vanruesc/circlerasteriser.svg?branch=master)](https://travis-ci.org/vanruesc/circlerasteriser) 
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/7sx1wwmvv2a6o1pm?svg=true)](https://ci.appveyor.com/project/vanruesc/circlerasteriser) 
 [![GitHub version](https://badge.fury.io/gh/vanruesc%2Fcirclerasteriser.svg)](http://badge.fury.io/gh/vanruesc%2Fcirclerasteriser) 
 [![Dependencies](https://david-dm.org/vanruesc/circlerasteriser.svg?branch=master)](https://david-dm.org/vanruesc/circlerasteriser)
 
@@ -25,7 +25,6 @@ $ npm link
 # You may now generate new raster graphics. If you leave out
 # the name, the image will be saved under output/circle.jpg
 $ circle -r 60 -x 100 -y 75 -n myCircle
-
 ```
 
 ```sh
@@ -59,7 +58,7 @@ $ rm circlerasteriser
 
 ## Documentation
 
-[API](http://vanruesc.github.io/raster-circle/docs)
+[API](http://vanruesc.github.io/circlerasteriser/docs)
 
 
 ## License

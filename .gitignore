@@ -47,6 +47,3 @@ node_modules
 
 # Logs
 *.log
-
-# Generated files
-output
