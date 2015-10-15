@@ -31,6 +31,7 @@ export default function CircleRasteriser(options) {
 	 *
 	 * @property _radius
 	 * @type Number
+	 * @private
 	 * @default 60
 	 */
 
@@ -124,6 +125,7 @@ export default function CircleRasteriser(options) {
 	 *
 	 * @property _gridLineWidth
 	 * @type Number
+	 * @private
 	 * @default 1
 	 */
 
@@ -134,6 +136,7 @@ export default function CircleRasteriser(options) {
 	 *
 	 * @property _pixelSize
 	 * @type Number
+	 * @private
 	 * @default 5
 	 */
 
@@ -280,7 +283,7 @@ Object.defineProperty(CircleRasteriser.prototype, "pixelSize", {
 });
 
 /**
- * The grid line width.
+ * The grid line width. If 0, no grid will be drawn.
  * 
  * @property gridLineWidth
  * @type Number
@@ -373,8 +376,8 @@ CircleRasteriser.prototype.fillPixelCell = function(x, y) {
 CircleRasteriser.prototype.generateImage = function() {
 
 	var decisionOver2;
-	var x0, y0, length, data;
-	var x, y, i, j;
+	var length, data;
+	var x, y, i, x0, y0;
 	var linePlusCell;
 
 	this._actualWidth = this._size.w * this._gridLineWidth + this._gridLineWidth + this._size.w * this._pixelSize;
@@ -396,8 +399,7 @@ CircleRasteriser.prototype.generateImage = function() {
 
 	// Grid and background.
 
-	x = 0; y = 0;
-	i = 0; j = 0;
+	x = 0; y = 0; i = 0;
 
 	linePlusCell = this._gridLineWidth + this._pixelSize;
 
