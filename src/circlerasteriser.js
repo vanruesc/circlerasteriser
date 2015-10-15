@@ -434,7 +434,6 @@ CircleRasteriser.prototype.generateImage = function() {
 				} else {
 
 					// Background.
-
 					data[i++] = this.bgColor.r;
 					data[i++] = this.bgColor.g;
 					data[i++] = this.bgColor.b;
