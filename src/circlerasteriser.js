@@ -18,6 +18,7 @@ export default function CircleRasteriser(options) {
 
 	/**
 	 * The last encoded jpeg image.
+	 * Contains the image data, width and height.
 	 *
 	 * @property image
 	 * @type {Object}
@@ -28,32 +29,65 @@ export default function CircleRasteriser(options) {
 	/**
 	 * The radius of the circle.
 	 *
-	 * @property radius
+	 * @property _radius
 	 * @type Number
 	 * @default 60
 	 */
 
-	this.radius = 60;
+	this._radius = 60;
 
 	/**
 	 * The center of the circle.
 	 *
-	 * @property center
+	 * @property _center
 	 * @type Object
-	 * @default {x: 0, y: 0}
+	 * @private
+	 * @default {x: 100, y: 75}
 	 */
 
-	this.center = {x: 0, y: 0};
+	this._center = {x: 100, y: 75};
 
 	/**
 	 * The size of the image.
 	 *
-	 * @property size
+	 * @property _size
 	 * @type Object
+	 * @private
 	 * @default {w: 200, h: 150}
 	 */
 
-	this.size = {w: 200, h: 150};
+	this._size = {w: 200, h: 150};
+
+	/**
+	 * The amount of pixels per raster row.
+	 *
+	 * @property _actualWidth
+	 * @type Number
+	 * @private
+	 */
+
+	this._actualWidth = 0;
+
+	/**
+	 * The amount of pixels per raster column.
+	 *
+	 * @property _actualHeight
+	 * @type Number
+	 * @private
+	 */
+
+	this._actualHeight = 0;
+
+	/**
+	 * The amount of pixels per raster row multiplied 
+	 * with the number of color channels (RGBA = 4).
+	 *
+	 * @property _valuesPerRow
+	 * @type Number
+	 * @private
+	 */
+
+	this._valuesPerRow = 0;
 
 	/**
 	 * The color of the circle.
@@ -63,7 +97,7 @@ export default function CircleRasteriser(options) {
 	 * @default {r: 175, g: 0, b: 0, a: 1}
 	 */
 
-	this.circleColor = {r: 175, g: 0, b: 0, a: 1};
+	this.circleColor = {r: 175, g: 0, b: 0, a: 1.0};
 
 	/**
 	 * The color of the background.
@@ -73,7 +107,7 @@ export default function CircleRasteriser(options) {
 	 * @default {r: 23, g: 23, b: 23, a: 1}
 	 */
 
-	this.bgColor = {r: 23, g: 23, b: 23, a: 1};
+	this.bgColor = {r: 23, g: 23, b: 23, a: 1.0};
 
 	/**
 	 * The color of the grid.
@@ -83,27 +117,37 @@ export default function CircleRasteriser(options) {
 	 * @default {r: 32, g: 40, b: 32, a: 1}
 	 */
 
-	this.gridColor = {r: 32, g: 40, b: 32, a: 1};
+	this.gridColor = {r: 32, g: 40, b: 32, a: 1.0};
 
 	/**
-	 * The line width of the grid. If 0, none will be drawn.
+	 * The line width of the grid. If 0, no grid will be drawn.
 	 *
-	 * @property gridLineWidth
+	 * @property _gridLineWidth
 	 * @type Number
 	 * @default 1
 	 */
 
-	this.gridLineWidth = 1;
+	this._gridLineWidth = 1;
 
 	/**
 	 * The size of a square pixel cell. 
 	 *
-	 * @property pixelSize
+	 * @property _pixelSize
 	 * @type Number
 	 * @default 5
 	 */
 
-	this.pixelSize = 5;
+	this._pixelSize = 5;
+
+	/**
+	 * The pixel size multiplied with the number of color channels (RGBA = 4). 
+	 *
+	 * @property _pixelSize4
+	 * @type Number
+	 * @private
+	 */
+
+	this._pixelSize4 = this._pixelSize * 4;
 
 	// Override defaults.
 	if(options !== undefined) {
@@ -122,6 +166,147 @@ export default function CircleRasteriser(options) {
 }
 
 /**
+ * The size of the raster graphic.
+ * 
+ * @property size
+ * @type Object
+ * @example
+ *  {w: 1920, h: 1080}
+ */
+
+Object.defineProperty(CircleRasteriser.prototype, "size", {
+
+	get: function() {
+
+		return this._size;
+
+	},
+
+	set: function(x) {
+
+		if(x !== undefined && x !== null && typeof x.w === "number" && typeof x.h === "number") {
+
+			this._size.w = (x.w + 0.5) | 0;
+			this._size.h = (x.h + 0.5) | 0;
+
+		}
+
+	}
+
+});
+
+/**
+ * The midpoint of the raster graphic.
+ * 
+ * @property center
+ * @type Object
+ * @example
+ *  {x: 1280, y: 720}
+ */
+
+Object.defineProperty(CircleRasteriser.prototype, "center", {
+
+	get: function() {
+
+		return this._center;
+
+	},
+
+	set: function(x) {
+
+		if(x !== undefined && x !== null && typeof x.x === "number" && typeof x.y === "number") {
+
+			this._center.x = (x.x + 0.5) | 0;
+			this._center.y = (x.y + 0.5) | 0;
+
+		}
+
+	}
+
+});
+
+/**
+ * The radius.
+ * 
+ * @property radius
+ * @type Number
+ */
+
+Object.defineProperty(CircleRasteriser.prototype, "radius", {
+
+	get: function() {
+
+		return this._radius;
+
+	},
+
+	set: function(x) {
+
+		if(typeof x === "number") {
+
+			this._radius = (x + 0.5) | 0;
+
+		}
+
+	}
+
+});
+
+/**
+ * The pixel size.
+ * 
+ * @property pixelSize
+ * @type Number
+ */
+
+Object.defineProperty(CircleRasteriser.prototype, "pixelSize", {
+
+	get: function() {
+
+		return this._pixelSize;
+
+	},
+
+	set: function(x) {
+
+		if(typeof x === "number") {
+
+			this._pixelSize = (x + 0.5) | 0;
+
+		}
+
+	}
+
+});
+
+/**
+ * The grid line width.
+ * 
+ * @property gridLineWidth
+ * @type Number
+ */
+
+Object.defineProperty(CircleRasteriser.prototype, "gridLineWidth", {
+
+	get: function() {
+
+		return this._gridLineWidth;
+
+	},
+
+	set: function(x) {
+
+		if(typeof x === "number") {
+
+			this._gridLineWidth = (x + 0.5) | 0;
+
+		}
+
+	}
+
+});
+
+/**
  * Calculates the start index of a pixel cell.
  *
  * @method calculateIndex
@@ -133,11 +318,8 @@ export default function CircleRasteriser(options) {
 
 CircleRasteriser.prototype.calculateIndex = function(x, y) {
 
-	var width = this.size.w * this.gridLineWidth + this.gridLineWidth + this.size.w * this.pixelSize;
-	var index = (y * this.pixelSize + y * this.gridLineWidth + this.gridLineWidth) * (width * 4) +
-		(x * this.pixelSize + x * this.gridLineWidth + this.gridLineWidth) * 4;
-
-	return index;
+	return ((y * this._pixelSize + y * this._gridLineWidth + this._gridLineWidth) * (this._actualWidth * 4) +
+		(x * this._pixelSize + x * this._gridLineWidth + this._gridLineWidth) * 4);
 
 };
 
@@ -152,23 +334,30 @@ CircleRasteriser.prototype.calculateIndex = function(x, y) {
 
 CircleRasteriser.prototype.fillPixelCell = function(x, y) {
 
-	var xPixels = (this.size.w * this.gridLineWidth + this.gridLineWidth + this.size.w * this.pixelSize) * 4;
-	var k, j, i = this.calculateIndex(x, y);
-	var data = this.image.data;
+	var k, j, i;
+	var data;
 
-	for(k = 0; k < this.pixelSize; ++k) {
+	if(x >= 0 && x < this._size.w && y >= 0 && y < this._size.h) {
 
-		for(j = 0; j < this.pixelSize; ++j) {
+		data = this.image.data;
 
-			data[i++] = this.circleColor.r;
-			data[i++] = this.circleColor.g;
-			data[i++] = this.circleColor.b;
-			data[i++] = this.circleColor.a;
+		i = this.calculateIndex(x, y);
+
+		for(k = 0; k < this._pixelSize; ++k) {
+
+			for(j = 0; j < this._pixelSize; ++j) {
+
+				data[i++] = this.circleColor.r;
+				data[i++] = this.circleColor.g;
+				data[i++] = this.circleColor.b;
+				data[i++] = this.circleColor.a;
+
+			}
+
+			// Next row.
+			i += this._valuesPerRow - this._pixelSize4;
 
 		}
-
-		// Next row.
-		i += xPixels - (this.pixelSize * 4);
 
 	}
 
@@ -184,56 +373,76 @@ CircleRasteriser.prototype.fillPixelCell = function(x, y) {
 CircleRasteriser.prototype.generateImage = function() {
 
 	var decisionOver2;
-	var x0 = this.center.x;
-	var y0 = this.center.y;
+	var x0, y0, length, data;
+	var x, y, i, j;
+	var linePlusCell;
 
-	var width = this.size.w * this.gridLineWidth + this.gridLineWidth + this.size.w * this.pixelSize;
-	var height = this.size.h * this.gridLineWidth + this.gridLineWidth + this.size.h * this.pixelSize;
+	this._actualWidth = this._size.w * this._gridLineWidth + this._gridLineWidth + this._size.w * this._pixelSize;
+	this._actualHeight = this._size.h * this._gridLineWidth + this._gridLineWidth + this._size.h * this._pixelSize;
+
+	this._valuesPerRow = this._actualWidth * 4;
+	this._pixelSize4 = this._pixelSize * 4;
 
 	// Create the pixel array by allocating space for RGBA values.
-	var length = width * height * 4;
-	var data = new Uint8ClampedArray(length);
+	length = this._actualWidth * this._actualHeight * 4;
+	data = new Uint8ClampedArray(length);
 
-	var x = 0, y = 0;
-	var i = 0, j = 0;
-	var grid = true;
+	// Prepare the image description.
+	this.image = {
+		data: data,
+		width: this._actualWidth,
+		height: this._actualHeight
+	};
 
-	while(y < height) {
+	// Grid and background.
+
+	x = 0; y = 0;
+	i = 0; j = 0;
+
+	linePlusCell = this._gridLineWidth + this._pixelSize;
+
+	while(y < this._actualHeight) {
 
 		x = 0;
-		grid = true;
 
-		while(x < width) {
+		// Horizontal grid line.
+		if(y % linePlusCell < this._gridLineWidth) {
 
-			if(grid || y % (this.pixelSize + this.gridLineWidth) < this.gridLineWidth) {
+			// Set the grid color for the entire row.
+			while(x < this._actualWidth) {
 
-				// Draw the grid.
-				for(j = 0; j < this.gridLineWidth; ++j) {
+				data[i++] = this.gridColor.r;
+				data[i++] = this.gridColor.g;
+				data[i++] = this.gridColor.b;
+				data[i++] = this.gridColor.a;
+				++x;
+
+			}
+
+		} else {
+
+			while(x < this._actualWidth) {
+
+				// Vertical grid line.
+				if(x % linePlusCell < this._gridLineWidth) {
 
 					data[i++] = this.gridColor.r;
 					data[i++] = this.gridColor.g;
 					data[i++] = this.gridColor.b;
 					data[i++] = this.gridColor.a;
-					++x;
 
-				}
+				} else {
 
-				grid = false;
-
-			} else {
-
-				// Set the background color.
-				for(j = 0; j < this.pixelSize; ++j) {
+					// Background.
 
 					data[i++] = this.bgColor.r;
 					data[i++] = this.bgColor.g;
 					data[i++] = this.bgColor.b;
 					data[i++] = this.bgColor.a;
-					++x;
 
 				}
 
-				grid = true;
+				++x;
 
 			}
 
@@ -243,17 +452,15 @@ CircleRasteriser.prototype.generateImage = function() {
 
 	}
 
-	this.image = {
-		data: data,
-		width: width,
-		height: height
-	};
+	// Midpoint circle algorithm.
 
-	x = this.radius;
+	x0 = this._center.x;
+	y0 = this._center.y;
+	x = this._radius;
 	y = 0;
+
 	decisionOver2 = 1 - x;
 
-	// Midpoint circle algorithm.
 	while(x >= y) {
 
 		this.fillPixelCell( x + x0,  y + y0);

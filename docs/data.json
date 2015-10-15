@@ -86,7 +86,7 @@
         {
             "file": "src\\circlerasteriser.js",
             "line": 19,
-            "description": "The last encoded jpeg image.",
+            "description": "The last encoded jpeg image.\nContains the image data, width and height.",
             "itemtype": "property",
             "name": "image",
             "type": "{Object}",
@@ -94,7 +94,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 28,
+            "line": 29,
             "description": "The radius of the circle.",
             "itemtype": "property",
             "name": "radius",
@@ -104,17 +104,17 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 38,
+            "line": 39,
             "description": "The center of the circle.",
             "itemtype": "property",
             "name": "center",
             "type": "Object",
-            "default": "{x: 0, y: 0}",
+            "default": "{x: 100, y: 75}",
             "class": "CircleRasteriser"
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 48,
+            "line": 49,
             "description": "The size of the image.",
             "itemtype": "property",
             "name": "size",
@@ -124,7 +124,40 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 58,
+            "line": 59,
+            "description": "The amount of pixels per raster row.",
+            "itemtype": "property",
+            "name": "_width",
+            "type": "Number",
+            "access": "private",
+            "tagname": "",
+            "class": "CircleRasteriser"
+        },
+        {
+            "file": "src\\circlerasteriser.js",
+            "line": 69,
+            "description": "The amount of pixels per raster column.",
+            "itemtype": "property",
+            "name": "_height",
+            "type": "Number",
+            "access": "private",
+            "tagname": "",
+            "class": "CircleRasteriser"
+        },
+        {
+            "file": "src\\circlerasteriser.js",
+            "line": 79,
+            "description": "The amount of pixels per raster row multiplied \nwith the number of color channels (RGBA = 4).",
+            "itemtype": "property",
+            "name": "_totalWidth",
+            "type": "Number",
+            "access": "private",
+            "tagname": "",
+            "class": "CircleRasteriser"
+        },
+        {
+            "file": "src\\circlerasteriser.js",
+            "line": 90,
             "description": "The color of the circle.",
             "itemtype": "property",
             "name": "circleColor",
@@ -134,7 +167,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 68,
+            "line": 100,
             "description": "The color of the background.",
             "itemtype": "property",
             "name": "bgColor",
@@ -144,7 +177,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 78,
+            "line": 110,
             "description": "The color of the grid.",
             "itemtype": "property",
             "name": "gridColor",
@@ -154,8 +187,8 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 88,
-            "description": "The line width of the grid. If 0, none will be drawn.",
+            "line": 120,
+            "description": "The line width of the grid. If 0, no grid will be drawn.",
             "itemtype": "property",
             "name": "gridLineWidth",
             "type": "Number",
@@ -164,7 +197,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 98,
+            "line": 130,
             "description": "The size of a square pixel cell.",
             "itemtype": "property",
             "name": "pixelSize",
@@ -174,7 +207,18 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 124,
+            "line": 140,
+            "description": "The pixel size multiplied with the number of color channels (RGBA = 4).",
+            "itemtype": "property",
+            "name": "pixelSize4",
+            "type": "Number",
+            "access": "private",
+            "tagname": "",
+            "class": "CircleRasteriser"
+        },
+        {
+            "file": "src\\circlerasteriser.js",
+            "line": 166,
             "description": "Calculates the start index of a pixel cell.",
             "itemtype": "method",
             "name": "calculateIndex",
@@ -200,7 +244,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 144,
+            "line": 185,
             "description": "Fills a cell with the circle color.",
             "itemtype": "method",
             "name": "fillPixelCell",
@@ -222,7 +266,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 177,
+            "line": 225,
             "description": "Generates the raster circle.",
             "itemtype": "method",
             "name": "generateImage",

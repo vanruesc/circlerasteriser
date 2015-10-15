@@ -100,6 +100,7 @@ export default function CircleRasteriser(options) {
 
 	/**
 	 * The last encoded jpeg image.
+	 * Contains the image data, width and height.
 	 *
 	 * @property image
 	 * @type {Object}
@@ -122,10 +123,10 @@ export default function CircleRasteriser(options) {
 	 *
 	 * @property center
 	 * @type Object
-	 * @default {x: 0, y: 0}
+	 * @default {x: 100, y: 75}
 	 */
 
-	this.center = {x: 0, y: 0};
+	this.center = {x: 100, y: 75};
 
 	/**
 	 * The size of the image.
@@ -138,6 +139,37 @@ export default function CircleRasteriser(options) {
 	this.size = {w: 200, h: 150};
 
 	/**
+	 * The amount of pixels per raster row.
+	 *
+	 * @property _width
+	 * @type Number
+	 * @private
+	 */
+
+	this._width = 0;
+
+	/**
+	 * The amount of pixels per raster column.
+	 *
+	 * @property _height
+	 * @type Number
+	 * @private
+	 */
+
+	this._height = 0;
+
+	/**
+	 * The amount of pixels per raster row multiplied 
+	 * with the number of color channels (RGBA = 4).
+	 *
+	 * @property _totalWidth
+	 * @type Number
+	 * @private
+	 */
+
+	this._totalWidth = 0;
+
+	/**
 	 * The color of the circle.
 	 *
 	 * @property circleColor
@@ -145,7 +177,7 @@ export default function CircleRasteriser(options) {
 	 * @default {r: 175, g: 0, b: 0, a: 1}
 	 */
 
-	this.circleColor = {r: 175, g: 0, b: 0, a: 1};
+	this.circleColor = {r: 175, g: 0, b: 0, a: 1.0};
 
 	/**
 	 * The color of the background.
@@ -155,7 +187,7 @@ export default function CircleRasteriser(options) {
 	 * @default {r: 23, g: 23, b: 23, a: 1}
 	 */
 
-	this.bgColor = {r: 23, g: 23, b: 23, a: 1};
+	this.bgColor = {r: 23, g: 23, b: 23, a: 1.0};
 
 	/**
 	 * The color of the grid.
@@ -165,10 +197,10 @@ export default function CircleRasteriser(options) {
 	 * @default {r: 32, g: 40, b: 32, a: 1}
 	 */
 
-	this.gridColor = {r: 32, g: 40, b: 32, a: 1};
+	this.gridColor = {r: 32, g: 40, b: 32, a: 1.0};
 
 	/**
-	 * The line width of the grid. If 0, none will be drawn.
+	 * The line width of the grid. If 0, no grid will be drawn.
 	 *
 	 * @property gridLineWidth
 	 * @type Number
@@ -186,6 +218,16 @@ export default function CircleRasteriser(options) {
 	 */
 
 	this.pixelSize = 5;
+
+	/**
+	 * The pixel size multiplied with the number of color channels (RGBA = 4). 
+	 *
+	 * @property pixelSize4
+	 * @type Number
+	 * @private
+	 */
+
+	this._pixelSize4 = this.pixelSize * 4;
 
 	// Override defaults.
 	if(options !== undefined) {
@@ -215,8 +257,7 @@ export default function CircleRasteriser(options) {
 
 CircleRasteriser.prototype.calculateIndex = function(x, y) {
 
-	var width = this.size.w * this.gridLineWidth + this.gridLineWidth + this.size.w * this.pixelSize;
-	var index = (y * this.pixelSize + y * this.gridLineWidth + this.gridLineWidth) * (width * 4) +
+	var index = (y * this.pixelSize + y * this.gridLineWidth + this.gridLineWidth) * (this._width * 4) +
 		(x * this.pixelSize + x * this.gridLineWidth + this.gridLineWidth) * 4;
 
 	return index;
@@ -234,23 +275,30 @@ CircleRasteriser.prototype.calculateIndex = function(x, y) {
 
 CircleRasteriser.prototype.fillPixelCell = function(x, y) {
 
-	var xPixels = (this.size.w * this.gridLineWidth + this.gridLineWidth + this.size.w * this.pixelSize) * 4;
-	var k, j, i = this.calculateIndex(x, y);
-	var data = this.image.data;
+	var k, j, i;
+	var data;
 
-	for(k = 0; k &lt; this.pixelSize; ++k) {
+	if(x &gt;= 0 &amp;&amp; x &lt; this.size.w &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; this.size.h) {
 
-		for(j = 0; j &lt; this.pixelSize; ++j) {
+		data = this.image.data;
 
-			data[i++] = this.circleColor.r;
-			data[i++] = this.circleColor.g;
-			data[i++] = this.circleColor.b;
-			data[i++] = this.circleColor.a;
+		i = this.calculateIndex(x, y);
+
+		for(k = 0; k &lt; this.pixelSize; ++k) {
+
+			for(j = 0; j &lt; this.pixelSize; ++j) {
+
+				data[i++] = this.circleColor.r;
+				data[i++] = this.circleColor.g;
+				data[i++] = this.circleColor.b;
+				data[i++] = this.circleColor.a;
+
+			}
+
+			// Next row.
+			i += this._totalWidth - (this._pixelSize4);
 
 		}
-
-		// Next row.
-		i += xPixels - (this.pixelSize * 4);
 
 	}
 
@@ -266,28 +314,41 @@ CircleRasteriser.prototype.fillPixelCell = function(x, y) {
 CircleRasteriser.prototype.generateImage = function() {
 
 	var decisionOver2;
-	var x0 = this.center.x;
-	var y0 = this.center.y;
+	var x0, y0, length, data;
+	var x, y, i, j, grid;
+	var gridLinePlusCell;
 
-	var width = this.size.w * this.gridLineWidth + this.gridLineWidth + this.size.w * this.pixelSize;
-	var height = this.size.h * this.gridLineWidth + this.gridLineWidth + this.size.h * this.pixelSize;
+	this._width = this.size.w * this.gridLineWidth + this.gridLineWidth + this.size.w * this.pixelSize;
+	this._height = this.size.h * this.gridLineWidth + this.gridLineWidth + this.size.h * this.pixelSize;
+
+	this._totalWidth = this._width * 4;
+	this._pixelSize4 = this.pixelSize * 4;
 
 	// Create the pixel array by allocating space for RGBA values.
-	var length = width * height * 4;
-	var data = new Uint8ClampedArray(length);
+	length = this._width * this._height * 4;
+	data = new Uint8ClampedArray(length);
 
-	var x = 0, y = 0;
-	var i = 0, j = 0;
-	var grid = true;
+	// Prepare the image description.
+	this.image = {
+		data: data,
+		width: this._width,
+		height: this._height
+	};
 
-	while(y &lt; height) {
+	x = 0; y = 0;
+	i = 0; j = 0;
+
+	grid = true;
+	gridLinePlusCell = this.gridLineWidth + this.pixelSize;
+
+	while(y &lt; this._height) {
 
 		x = 0;
 		grid = true;
 
-		while(x &lt; width) {
+		while(x &lt; this._width) {
 
-			if(grid || y % (this.pixelSize + this.gridLineWidth) &lt; this.gridLineWidth) {
+			if(grid || y % (gridLinePlusCell) &lt; this.gridLineWidth) {
 
 				// Draw the grid.
 				for(j = 0; j &lt; this.gridLineWidth; ++j) {
@@ -325,17 +386,15 @@ CircleRasteriser.prototype.generateImage = function() {
 
 	}
 
-	this.image = {
-		data: data,
-		width: width,
-		height: height
-	};
+	// Midpoint circle algorithm.
 
+	x0 = this.center.x;
+	y0 = this.center.y;
 	x = this.radius;
 	y = 0;
+
 	decisionOver2 = 1 - x;
 
-	// Midpoint circle algorithm.
 	while(x &gt;= y) {
 
 		this.fillPixelCell( x + x0,  y + y0);
