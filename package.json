@@ -69,7 +69,7 @@
 		"mkdirp": "0.x.x",
 		"mocha": "2.x.x",
 		"prepend-file": "1.x.x",
-		"rollup": "0.17.x",
+		"rollup": "0.x.x",
 		"uglify-js": "2.x.x",
 		"yuidocjs": "0.x.x"
 	}
