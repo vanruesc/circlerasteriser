@@ -14,8 +14,8 @@ to set a pixel size and a grid line width. The grid can also be deactivated by s
 First, download and install [NodeJS](https://nodejs.org) (9Mb Download, 23Mb Installation).
 
 ```sh
-# Clone this project, unzip it and navigate to its topmost directory.
-$ cd circlerasteriser
+# Download this project, unzip it and navigate to its topmost directory.
+$ cd circlerasteriser-master
 
 # Register the program globally.
 $ npm link
@@ -56,7 +56,6 @@ $ circle -r 60 -x 100 -y 75 -n myCircle
 $ npm unlink
 
 # After that, simply remove the project.
-$ rm circlerasteriser
 ```
 
 
