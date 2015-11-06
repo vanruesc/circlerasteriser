@@ -1,7 +1,7 @@
 /**
- * circlerasteriser v0.0.0 build Oct 15 2015
+ * circlerasteriser v0.0.0 build Nov 06 2015
  * https://github.com/vanruesc/circlerasteriser
- * Copyright 2015 Raoul van Rueschen, Zlib
+ * Copyright 2015 Raoul van Rüschen, Zlib
  */
 'use strict';
 

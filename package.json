@@ -51,7 +51,7 @@
 		"postbuild": "node banner.js && mkdirp output",
 		"pretest": "npm run build",
 		"test": "npm run mocha",
-		"posttest": "npm unlink && npm link && circle -r 60 -x 100 -y 75"
+		"posttest": "npm link && circle -r 60 -x 100 -y 75"
 
 	},
 
