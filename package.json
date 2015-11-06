@@ -1,5 +1,5 @@
 {
-	"name": "@zayesh/circlerasteriser",
+	"name": "@vanruesc/circlerasteriser",
 	"version": "0.0.0",
 	"description": "A circle rasterisation program.",
 	"homepage": "https://github.com/vanruesc/circlerasteriser",
