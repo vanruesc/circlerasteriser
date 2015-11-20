@@ -234,13 +234,13 @@
             "name": "size",
             "type": "Object",
             "example": [
-                "\n {w: 1920, h: 1080}"
+                " {w: 1920, h: 1080}"
             ],
             "class": "CircleRasteriser"
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 201,
+            "line": 200,
             "description": "The midpoint of the raster graphic.",
             "itemtype": "property",
             "name": "center",
@@ -252,7 +252,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 231,
+            "line": 230,
             "description": "The radius.",
             "itemtype": "property",
             "name": "radius",
@@ -261,7 +261,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 258,
+            "line": 257,
             "description": "The pixel size.",
             "itemtype": "property",
             "name": "pixelSize",
@@ -270,7 +270,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 285,
+            "line": 284,
             "description": "The grid line width. If 0, no grid will be drawn.",
             "itemtype": "property",
             "name": "gridLineWidth",
@@ -279,7 +279,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 312,
+            "line": 311,
             "description": "Calculates the start index of a pixel cell.",
             "itemtype": "method",
             "name": "calculateIndex",
@@ -305,7 +305,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 329,
+            "line": 328,
             "description": "Fills a cell with the circle color.",
             "itemtype": "method",
             "name": "fillPixelCell",
@@ -327,7 +327,7 @@
         },
         {
             "file": "src\\circlerasteriser.js",
-            "line": 369,
+            "line": 368,
             "description": "Generates the raster circle.",
             "itemtype": "method",
             "name": "generateImage",

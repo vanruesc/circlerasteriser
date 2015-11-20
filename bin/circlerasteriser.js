@@ -17,12 +17,10 @@ var rasteriser = new CircleRasteriser({
 var name = argv.n ? argv.n : argv.o ? argv.o : "circle";
 
 // Create the image data.
-var data = rasteriser.generateImage();
-
-if(data !== null) {
+if(rasteriser.generateImage() !== null) {
 
 	// Encode the data and save the image.
-	fs.writeFileSync("output/" + name + ".jpg", jpeg.encode(data, 90).data);
+	fs.writeFileSync("output/" + name + ".jpg", jpeg.encode(rasteriser.image, 90).data);
 	console.log("Raster graphic generated");
 
 }
