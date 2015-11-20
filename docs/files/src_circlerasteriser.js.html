@@ -255,8 +255,7 @@ export default function CircleRasteriser(options) {
  * 
  * @property size
  * @type Object
- * @example
- *  {w: 1920, h: 1080}
+ * @example {w: 1920, h: 1080}
  */
 
 Object.defineProperty(CircleRasteriser.prototype, &quot;size&quot;, {
@@ -271,8 +270,8 @@ Object.defineProperty(CircleRasteriser.prototype, &quot;size&quot;, {
 
 		if(x !== undefined &amp;&amp; x !== null &amp;&amp; typeof x.w === &quot;number&quot; &amp;&amp; typeof x.h === &quot;number&quot;) {
 
-			this._size.w = (x.w + 0.5) | 0;
-			this._size.h = (x.h + 0.5) | 0;
+			this._size.w = Math.abs(x.w + 0.5) | 0;
+			this._size.h = Math.abs(x.h + 0.5) | 0;
 
 		}
 
@@ -301,8 +300,8 @@ Object.defineProperty(CircleRasteriser.prototype, &quot;center&quot;, {
 
 		if(x !== undefined &amp;&amp; x !== null &amp;&amp; typeof x.x === &quot;number&quot; &amp;&amp; typeof x.y === &quot;number&quot;) {
 
-			this._center.x = (x.x + 0.5) | 0;
-			this._center.y = (x.y + 0.5) | 0;
+			this._center.x = Math.abs(x.x + 0.5) | 0;
+			this._center.y = Math.abs(x.y + 0.5) | 0;
 
 		}
 
@@ -329,7 +328,7 @@ Object.defineProperty(CircleRasteriser.prototype, &quot;radius&quot;, {
 
 		if(typeof x === &quot;number&quot;) {
 
-			this._radius = (x + 0.5) | 0;
+			this._radius = Math.abs(x + 0.5) | 0;
 
 		}
 
@@ -356,7 +355,7 @@ Object.defineProperty(CircleRasteriser.prototype, &quot;pixelSize&quot;, {
 
 		if(typeof x === &quot;number&quot;) {
 
-			this._pixelSize = (x + 0.5) | 0;
+			this._pixelSize = Math.abs(x + 0.5) | 0;
 
 		}
 
@@ -383,7 +382,7 @@ Object.defineProperty(CircleRasteriser.prototype, &quot;gridLineWidth&quot;, {
 
 		if(typeof x === &quot;number&quot;) {
 
-			this._gridLineWidth = (x + 0.5) | 0;
+			this._gridLineWidth = Math.abs(x + 0.5) | 0;
 
 		}
 
